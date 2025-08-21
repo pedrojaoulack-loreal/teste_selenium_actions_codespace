@@ -22,10 +22,15 @@ options.add_argument('--media-cache-size=1')
 options.add_argument('--incognito')
 options.add_argument('--remote-debugging-port=9222')
 options.add_argument('--aggressive-cache-discard')
+# Important for headless environments to prevent DevToolsActivePort errors
+options.add_argument('--remote-allow-origins=*')
 
-service = Service('/usr/local/bin/chromedriver')
-    
+
+# Use ChromeDriverManager to automatically download and manage the ChromeDriver
+# Isso garante que a versão do ChromeDriver seja compatível com a versão do Chrome instalada.
+service = Service(ChromeDriverManager(chrome_type=ChromeType.GOOGLE).install())
+
 driver = webdriver.Chrome(service=service, options=options)
-driver.get('google.com')
+driver.get('http://www.google.com') # Sempre inclua o protocolo (http:// ou https://)
 print(f"Título da página: {driver.title}")
 driver.quit()
